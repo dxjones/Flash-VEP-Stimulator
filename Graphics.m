@@ -11,10 +11,12 @@ switch action
         
     case 'begin'
         if P.debug
+            G.oldSkipSyncTests = Screen('Preference', 'SkipSyncTests', 0);
             G.oldVerbosity = Screen('Preference', 'Verbosity', 4);
             G.oldSuppressAllWarnings = Screen('Preference', 'SuppressAllWarnings', 0);
             G.oldVisualDebugLevel = Screen('Preference', 'VisualDebugLevel', 4);
         else
+            G.oldSkipSyncTests = Screen('Preference', 'SkipSyncTests', 1);
             G.oldVisualDebugLevel = Screen('Preference', 'VisualDebugLevel', 3);
             G.oldSuppressAllWarnings = Screen('Preference', 'SuppressAllWarnings', 1);
             G.oldVerbosity = Screen('Preference', 'Verbosity', 1);
@@ -28,6 +30,7 @@ switch action
         Screen('CloseAll');
         ShowCursor;
         Priority(G.oldPriority);
+        Screen('Preference', 'SkipSyncTests', G.oldSkipSyncTests);
         Screen('Preference', 'VisualDebugLevel', G.oldVisualDebugLevel);
         Screen('Preference', 'SuppressAllWarnings', G.oldSuppressAllWarnings);
         Screen('Preference', 'Verbosity', G.oldVerbosity);
