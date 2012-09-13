@@ -4,18 +4,36 @@ function Graphics(action, exception)
 
 global P G;
 
+% actual LCD or CRT FrameRate measured using FrameRate.m
+% table used to convert PTB Hz to actual Hz
+% PTB returns 0 Hz for LCD
+FrameRateTable = [ ...
+      0      59.952 ; ...
+    100     100.559 ; ...
+    ];
+
 switch action
     case 'create'
         G = [];
         G.whichScreen = max(Screen('Screens'));
         res = Screen('Resolution', G.whichScreen);
         G.FrameRate = res.hz;
-        % if screen is LCD, PTB returns 0 Hz FrameRate
-        % adjust to nominal rate of about 60 Hz
-        if G.FrameRate < 20
-            G.FrameRate = 60;
+
+        % if FrameRate is in Table, substitute measured value
+        X = find(FrameRateTable(:,1) == G.FrameRate);
+        if ~isempty(X)
+            G.FrameRate = FrameRateTable(X,2);
         end
+        
         G.FramePeriod = 1 / G.FrameRate;
+        
+        % warn if stimulus frequency does not evenly divide display frequency
+        if mod(G.FrameRate, P.Frequency) > 0.001
+            fprintf('\nWARNING: Stimulus Frequency (%.3f Hz) does not evenly divide Display Frequency (%.3f Hz)\n', P.Frequency, G.FrameRate);
+            P.Period = round(P.Period / G.FramePeriod) * G.FramePeriod;
+            P.Frequency = 1 / P.Period;
+            fprintf('Adjusted Stimulus Frequency = %.3f Hz\n', P.Frequency);
+        end
         
         % initialize these, just in case there is a PTB exception
         % ... in which case, we invoke Graphics('error'), Graphics('end')
