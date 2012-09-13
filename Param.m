@@ -7,11 +7,11 @@ global P;
 switch action
     case 'create'
         P = [];
-        P.debug = false;            % true, false
+        P.Debug = true;            % true, false
         P.BlackLevel = 0;           % 0 .. 255
         P.WhiteLevel = 255;         % 0 .. 255
         P.Frequency = 2;            % Hz
-        P.Duration = 10;            % seconds
+        P.Duration = 20;            % seconds
         P.Delay = 5;                % seconds
         
         %% calculated values

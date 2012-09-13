@@ -79,7 +79,7 @@ switch action
                         break
                     end
                 end
-                if P.debug
+                if P.Debug
                     fprintf('[ code = %d ]\n', code);
                 end
                 break
